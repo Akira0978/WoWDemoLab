@@ -1,0 +1,26 @@
+<!-- templates/complete.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Authentication result</title>
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:#f6f8fb; color:#111827; }
+    .card { max-width:640px; margin:8vh auto; background:white; padding:28px; border-radius:12px; box-shadow:0 6px 24px rgba(16,24,40,0.08); text-align:center; }
+    .ok { color: #065f46; }
+    .bad { color: #b91c1c; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    {% if success is not defined or success %}
+      <h2 class="ok">Authentication complete</h2>
+      <p>You will be redirected to your application shortly.</p>
+    {% else %}
+      <h2 class="bad">Authentication failed</h2>
+      <p>{{ message }}</p>
+    {% endif %}
+  </div>
+</body>
+</html>

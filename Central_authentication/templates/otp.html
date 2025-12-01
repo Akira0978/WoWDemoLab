@@ -1,0 +1,60 @@
+<!-- templates/otp.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Enter OTP — WOW DEMO LAB</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <main class="container">
+    <section class="card">
+      <h1 class="title">Verify Access</h1>
+      <p class="subtitle">Enter the 6‑digit code sent to your email</p>
+
+      <form id="otpForm" class="form">
+        <label class="label">OTP</label>
+        <input id="otp" name="otp" class="input" type="text" maxlength="6" inputmode="numeric" pattern="[0-9]*" required />
+        <button id="verifyBtn" class="btn">Verify</button>
+      </form>
+
+      <div id="anim" class="anim" aria-hidden="true">
+        <div class="ring"></div>
+        <div class="check">✓</div>
+      </div>
+
+      <div id="status" class="status" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script>
+    // Extract request_id from query string
+    const params = new URLSearchParams(window.location.search);
+    const requestId = params.get('request_id');
+    const status = document.getElementById('status');
+    const anim = document.getElementById('anim');
+
+    document.getElementById('otpForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = 'Verifying…';
+      const otp = document.getElementById('otp').value.trim();
+      const resp = await fetch('/verify-otp', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({request_id: requestId, otp})
+      });
+      const data = await resp.json();
+      if (resp.ok && data.redirect) {
+        // Play animation then redirect
+        anim.classList.add('play');
+        setTimeout(() => {
+          window.location.href = data.redirect;
+        }, 800);
+      } else {
+        status.innerHTML = `<div class="error">${data.error || 'Verification failed'}</div>`;
+      }
+    });
+  </script>
+</body>
+</html>

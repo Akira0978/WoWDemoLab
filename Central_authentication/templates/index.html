@@ -1,0 +1,38 @@
+<!-- templates/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ app_name }}</title>
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:#f6f8fb; color:#1f2937; }
+    .card { max-width:720px; margin:6vh auto; background:white; padding:28px; border-radius:12px; box-shadow:0 6px 24px rgba(16,24,40,0.08); }
+    h1 { margin:0 0 8px 0; font-size:20px; }
+    p.lead { margin:0 0 18px 0; color:#4b5563; }
+    label { display:block; margin-top:12px; font-size:13px; color:#374151; }
+    input[type="text"] { width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e5e7eb; margin-top:6px; }
+    .btn { display:inline-block; margin-top:16px; padding:10px 16px; background:#0f62fe; color:white; border-radius:8px; text-decoration:none; }
+    .note { margin-top:12px; color:#6b7280; font-size:13px; }
+    .error { color:#b91c1c; margin-top:8px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>{{ app_name }}</h1>
+    <p class="lead">Sign in once via Azure AD and access your WoW Demo Lab apps. Enter the app URL you want to open after authentication.</p>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form action="{{ url_for('login') }}" method="get">
+      <label for="target">Target app URL (must be whitelisted)</label>
+      <input id="target" name="target" type="text" placeholder="https://wowfactory.azurewebsites.net" value="{{ target|default('') }}" required />
+      <button class="btn" type="submit">Sign in with Azure AD</button>
+    </form>
+
+    <p class="note">This gateway will authenticate you with Azure AD, extract your corporate email, and issue a short‑lived access token for the target app.</p>
+  </div>
+</body>
+</html>
